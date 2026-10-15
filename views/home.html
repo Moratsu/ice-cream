@@ -6,6 +6,7 @@
     <title>Ice cream</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="icon" href="images/Ice-Cream.jpg">
+    <script src="js/ice-cream.js" defer></script>
 </head>
 <body>
     <div id="main">
@@ -19,17 +20,21 @@
                 <legend>Personal Information</legend>
                 <label for="name">Name: <br> </label>
                 <input type="text" id="name" name="name">
+                <span class="err" id="err-name">Name is required</span>
                 <br>
                 <label for="email">Email: <br> </label>
                 <input type="email" id="email" name="email">
+                <span class="err" id="err-email">Email is required</span>
             </fieldset>
 
             <!-- Order Details -->
              <fieldset>
                 <legend>Order Details</legend>
                 <label>Choose your flavor:</label>
+                <span class="err" id="err-flavor">Flavor is required</span>
                 <br>
                 <select id="size" name="size">
+                    <option value="Select">--Select--</option>
                     <option value="Vanilla">Vanilla</option>
                     <option value="Strawerry">Strawberry</option>
                     <option value="Chocolate">Chocolate</option>
@@ -37,8 +42,9 @@
 
                 <br>
                 <br>
-
+                
                 <label>Choose your cone:</label>
+                <span class="err" id="err-method">Select pickup or delivery</span>
                 <br>
                 <label for="Waffle">
                     <input type="radio" id="Waffle" name="method" value="Waffle">
