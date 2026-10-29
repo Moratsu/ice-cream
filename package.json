@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/Moratsu/ice-cream#readme",
   "dependencies": {
-    "ejs": "^7.0.2",
     "express": "^5.2.1"
   },
   "devDependencies": {
