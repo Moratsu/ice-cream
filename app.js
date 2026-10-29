@@ -9,12 +9,19 @@ const PORT = 3001;
 
 app.use(express.static('public'));
 
+//Add "middleware" to allow the app to parse form data
+//Access form data through req.body
+app.use(express.urlencoded({ extended: true }));
+
+// Set view engine to EJS
+app.set('view engine', 'ejs');
+
 //Define a default "route" ('/')
 //req: contains information about the incoming request
 //res: allows us to send back a response to the client
 app.get('/', (req, res) => {
     //res.send('Welcome to My Ice Cream Shop!');
-    res.sendFile(`${import.meta.dirname}/views/home.html`);
+    res.render('home');
 });
 
 //Start the server and listen on the specified port
