@@ -7,6 +7,8 @@ const app = express();
 //Define the port number where our server will listen
 const PORT = 3001;
 
+const orders = [];
+
 app.use(express.static('public'));
 
 //Add "middleware" to allow the app to parse form data
@@ -22,6 +24,23 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     //res.send('Welcome to My Ice Cream Shop!');
     res.render('home');
+});
+
+app.post('/submit-order', (req, res) => {
+  // req.body contains a JSON object of all the form inputs
+  const order = req.body;
+  
+  // Add a timestamp so we know exactly when the order was placed
+  order.timestamp = new Date();
+
+  // Log the order to the terminal to verify it works
+  console.log("New Order Received:", order);
+
+  // Add the new order object to our orders array
+  orders.push(order);
+  console.log(orders);
+
+  res.render('confirm', { order });
 });
 
 //Start the server and listen on the specified port

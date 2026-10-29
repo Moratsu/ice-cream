@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm</title>
+</head>
+<body>
+  <h1>Confirmed order</h1>
+
+  <h2> Order Summary</h2>
+  <p> Name: <%= order.name %> </p>
+  <p> Email: <%= order.email %></p>
+  <p> Flavor: <%= order.flavor %></p>
+  <p> Cone: <%= order.method %></p>
+  <p> Toppings:<%= order.toppings %></p>
+  <p> Comments:<%= order.comment %></p>
+  <p> Times:<%= order.timestamp.toLocaleString() %></p>
+
+  <a href="/">Place another order </a>
+
+</body>
+</html>

@@ -14,7 +14,7 @@
             <h1>Ice Cream Order Form</h1>
         </div>
 
-        <form id="ic-form" action="#" method="get">
+        <form id="ic-form" action="/submit-order" method="POST">
             <!-- Contact Info -->
             <fieldset>
                 <legend>Personal Information</legend>
@@ -33,7 +33,7 @@
                 <label>Choose your flavor:</label>
                 <span class="err" id="err-flavor">Flavor is required</span>
                 <br>
-                <select id="size" name="size">
+                <select id="flavor" name="flavor">
                     <option value="Select">--Select--</option>
                     <option value="Vanilla">Vanilla</option>
                     <option value="Strawerry">Strawberry</option>
