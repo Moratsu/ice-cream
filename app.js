@@ -1,9 +1,13 @@
-import mysql2 from 'mysql2';
-import dotenv from 'dotenv';
-dotenv.config();
-
 //Import the express module
 import express from 'express';
+
+// Import the mysql2 module
+// mysql2 allows Node.js to communicate with a MySQL database
+import mysql2 from 'mysql2';
+
+// Import .env
+import dotenv from 'dotenv';
+dotenv.config();
 
 const pool = mysql2.createPool({
     host: process.env.DB_HOST,
@@ -30,7 +34,8 @@ app.use(express.urlencoded({ extended: true }));
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 
-// Create a route to test the database
+// Create a route to test the 
+/*
 app.get('/db-test', async(req, res) => {
     try {
         const [orders] = await 
@@ -41,6 +46,7 @@ app.get('/db-test', async(req, res) => {
         res.status(500).send('Database error: ' + err.message);
     }
 });
+*/
 
 //Define a default "route" ('/')
 //req: contains information about the incoming request
@@ -67,11 +73,21 @@ app.post('/submit-order', (req, res) => {
   res.render('confirm', { order });
 });
 
-
-
 //Add an admin route
-app.get('/admin', (req, res) => {
-    res.render('admin', {orders});
+app.get('/admin', async(req, res) => {
+    try {
+        // Fetch all orders from database, most recent first
+        const [orders] = await pool.query(`SELECT * FROM orders
+            ORDER BY timestamp DESC`);
+        
+        console.log(orders);
+        
+        // Render the admin page
+        res.render('admin', { orders });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Error loading orders: ' + err.message);
+    }
 });
 
 //Start the server and listen on the specified port
