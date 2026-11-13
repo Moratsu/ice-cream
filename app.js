@@ -30,18 +30,6 @@ app.use(express.urlencoded({ extended: true }));
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 
-// Create a route to test the database
-app.get('/db-test', async(req, res) => {
-    try {
-        const [orders] = await 
-            pool.query('SELECT * FROM orders');
-        res.send(orders);
-    } catch(err) {
-        console.error('Database error: ', err);
-        res.status(500).send('Database error: ' + err.message);
-    }
-});
-
 //Define a default "route" ('/')
 //req: contains information about the incoming request
 //res: allows us to send back a response to the client
@@ -54,27 +42,27 @@ app.get('/', (req, res) => {
 app.post('/submit-order', async (req, res) => {
     try {
         const order = req.body;
+        order.timestamp = new Date().toLocaleString();
         console.log('New Order submitted:', order);
 
         order.toppings = Array.isArray(order.toppings) ? 
         order.toppings.join(", ") : "";
 
-        const sql = 'INSERT INTO orders (name, email, flavor, cone, toppings, cone, comment) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO orders (customer, email, flavor, cone, toppings, comment) VALUES (?, ?, ?, ?, ?, ?)';
 
         const params = [
-            order.name,
+            order.customer,
             order.email,
             order.flavor,
             order.cone,
             order.toppings,
-            order.cone,
             order.comment
         ];
 
         const [result] = await pool.execute(sql, params);
 
         order.id = result.insertId;
-        console.log('Order saved with ID: ', order.id);
+        console.log('Order saved with ID: ' + order.id);
 
         res.render('confirm', { order });
 
@@ -84,11 +72,18 @@ app.post('/submit-order', async (req, res) => {
     }
 });
 
-
-
 //Add an admin route
-app.get('/admin', (req, res) => {
-    res.render('admin', {orders});
+app.get('/admin', async(req, res) => {
+    try {
+        // Fetch all orders from database, most recent first
+        const [orders] = await pool.query(`SELECT * FROM orders
+                ORDER BY timestamp DESC`);  
+        // Render the admin page
+        res.render('admin', {orders});        
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Error loading orders: ' + err.message);
+    }
 });
 
 //Start the server and listen on the specified port

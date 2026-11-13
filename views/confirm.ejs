@@ -9,13 +9,14 @@
   <h1>Confirmed order</h1>
 
   <h2> Order Summary</h2>
+  <h3> Order ID: <%= order.id %></h3>
   <p> Name: <%= order.customer %> </p>
   <p> Email: <%= order.email %></p>
   <p> Flavor: <%= order.flavor %></p>
   <p> Cone: <%= order.cone %></p>
   <p> Toppings:<%= order.toppings %></p>
   <p> Comments:<%= order.comment %></p>
-  <p> Times:<%= order.timestamp.toLocaleString() %></p>
+  <p> Times:<%= order.timestamp %></p>
 
   <a href="/">Place another order</a>
   <br>
