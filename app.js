@@ -1,13 +1,9 @@
-//Import the express module
-import express from 'express';
-
-// Import the mysql2 module
-// mysql2 allows Node.js to communicate with a MySQL database
 import mysql2 from 'mysql2';
-
-// Import .env
 import dotenv from 'dotenv';
 dotenv.config();
+
+//Import the express module
+import express from 'express';
 
 const pool = mysql2.createPool({
     host: process.env.DB_HOST,
@@ -34,8 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 
-// Create a route to test the 
-/*
+// Create a route to test the database
 app.get('/db-test', async(req, res) => {
     try {
         const [orders] = await 
@@ -46,7 +41,6 @@ app.get('/db-test', async(req, res) => {
         res.status(500).send('Database error: ' + err.message);
     }
 });
-*/
 
 //Define a default "route" ('/')
 //req: contains information about the incoming request
@@ -56,35 +50,44 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.post('/submit-order', (req, res) => {
-  // req.body contains a JSON object of all the form inputs
-  const order = req.body;
-  
-  // Add a timestamp so we know exactly when the order was placed
-  order.timestamp = new Date();
+// Add 'async' right before (req, res)
+app.post('/submit-order', async (req, res) => {
+    try {
+        const order = req.body;
+        console.log('New Order submitted:', order);
 
-  // Log the order to the terminal to verify it works
-  console.log("New Order Received:", order);
+        order.toppings = Array.isArray(order.toppings) ? 
+        order.toppings.join(", ") : "";
 
-  // Add the new order object to our orders array
-  orders.push(order);
-  console.log(orders);
+        const sql = 'INSERT INTO orders (name, email, flavor, toppings, method, comment) VALUES (?, ?, ?, ?, ?, ?)';
 
-  res.render('confirm', { order });
+        const params = [
+            order.name,
+            order.email,
+            order.flavor,
+            order.toppings,
+            order.method,
+            order.comment
+        ];
+
+        const [result] = await pool.execute(sql, params);
+
+        order.id = result.insertId;
+        console.log('Order saved with ID: ', order.id);
+
+        res.render('confirm', { order });
+
+    } catch (err) {
+        console.error('Error saving order :', err);
+        res.status(500).send('Sorry there was an error processing your order. Please try again.');
+    }
 });
 
+
+
 //Add an admin route
-app.get('/admin', async(req, res) => {
-    try {
-        // Fetch all orders from database, most recent first
-        const [orders] = await pool.query('SELECT * FROM orders ORDER BY timestamp DESC');
-        console.log(orders);   
-        // Render the admin page
-        res.render('admin', { orders });
-    } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).send('Error loading orders: ' + err.message);
-    }
+app.get('/admin', (req, res) => {
+    res.render('admin', {orders});
 });
 
 //Start the server and listen on the specified port
