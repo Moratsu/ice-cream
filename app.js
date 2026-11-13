@@ -13,7 +13,7 @@ const pool = mysql2.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    database: process.env.DB_DATABASE,
     port: process.env.DB_PORT
 }).promise();
 
@@ -77,11 +77,8 @@ app.post('/submit-order', (req, res) => {
 app.get('/admin', async(req, res) => {
     try {
         // Fetch all orders from database, most recent first
-        const [orders] = await pool.query(`SELECT * FROM orders
-            ORDER BY timestamp DESC`);
-        
-        console.log(orders);
-        
+        const [orders] = await pool.query('SELECT * FROM orders ORDER BY timestamp DESC');
+        console.log(orders);   
         // Render the admin page
         res.render('admin', { orders });
     } catch (err) {
