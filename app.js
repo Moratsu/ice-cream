@@ -59,14 +59,15 @@ app.post('/submit-order', async (req, res) => {
         order.toppings = Array.isArray(order.toppings) ? 
         order.toppings.join(", ") : "";
 
-        const sql = 'INSERT INTO orders (name, email, flavor, toppings, method, comment) VALUES (?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO orders (name, email, flavor, cone, toppings, cone, comment) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
         const params = [
             order.name,
             order.email,
             order.flavor,
+            order.cone,
             order.toppings,
-            order.method,
+            order.cone,
             order.comment
         ];
 
