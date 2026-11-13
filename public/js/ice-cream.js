@@ -6,9 +6,9 @@ document.getElementById("ic-form").onsubmit = () => {
     clearErrors();
 
     //Validates the users name
-    let name = document.getElementById("name").value.trim();
+    let name = document.getElementById("customer").value.trim();
     if(name === "") {
-        document.getElementById("err-name").style.display = "block";
+        document.getElementById("err-customer").style.display = "block";
         isValid = false;
     }
 
