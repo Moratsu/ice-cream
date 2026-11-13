@@ -59,15 +59,14 @@ app.post('/submit-order', async (req, res) => {
         order.toppings = Array.isArray(order.toppings) ? 
         order.toppings.join(", ") : "";
 
-        const sql = 'INSERT INTO orders (name, email, flavor, cone, toppings, cone, comment) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO orders (customer, email, flavor, cone, toppings, comment) VALUES (?, ?, ?, ?, ?, ?)';
 
         const params = [
-            order.name,
+            order.customer,
             order.email,
             order.flavor,
             order.cone,
             order.toppings,
-            order.cone,
             order.comment
         ];
 
@@ -84,11 +83,21 @@ app.post('/submit-order', async (req, res) => {
     }
 });
 
-
-
 //Add an admin route
-app.get('/admin', (req, res) => {
-    res.render('admin', {orders});
+app.get('/admin', async(req, res) => {
+    try {
+        // Fetch all orders from database, most recent first
+        const [orders] = await pool.query(`SELECT * FROM orders
+            ORDER BY timestamp DESC`);
+        
+        console.log(orders);
+        
+        // Render the admin page
+        res.render('admin', { orders });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Error loading orders: ' + err.message);
+    }
 });
 
 //Start the server and listen on the specified port

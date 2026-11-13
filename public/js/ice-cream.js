@@ -28,7 +28,7 @@ document.getElementById("ic-form").onsubmit = () => {
     
     //Validates the users cone selection
     let methodSelected = false;
-    let methodButtons = document.getElementsByName("method");
+    let methodButtons = document.getElementsByName("cone");
     for (let i=0; i<methodButtons.length; i++) {
         if(methodButtons[i].checked) {
             methodSelected = true;
