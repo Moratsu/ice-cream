@@ -1,9 +1,10 @@
-import mysql2 from 'mysql2';
-import dotenv from 'dotenv';
-dotenv.config();
-
 //Import the express module
 import express from 'express';
+
+import mysql2 from 'mysql2';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const pool = mysql2.createPool({
     host: process.env.DB_HOST,
@@ -75,23 +76,12 @@ app.post('/submit-order', async (req, res) => {
 //Add an admin route
 app.get('/admin', async(req, res) => {
     try {
-        // Fetch all orders from database, most recent first
-        const [orders] = await pool.query(`SELECT * FROM orders
-<<<<<<< HEAD
-            ORDER BY timestamp DESC`);
-        
+        const [orders] = await pool.query('SELECT * FROM orders ORDER BY timestamp DESC');
         console.log(orders);
-        
-        // Render the admin page
-        res.render('admin', { orders });
-=======
-                ORDER BY timestamp DESC`);  
-        // Render the admin page
-        res.render('admin', {orders});        
->>>>>>> af9341a6203397d0f3e5a1204f9f2f26d14171b9
-    } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).send('Error loading orders: ' + err.message);
+        res.render('admin', {orders});
+    } catch(err) {
+        console.error('Database error: ', err);
+        res.status(500).send('Database error occurred.');
     }
 });
 
