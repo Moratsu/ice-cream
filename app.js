@@ -6,6 +6,8 @@ import mysql2 from 'mysql2';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import session from 'express-session';
+
 const pool = mysql2.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
