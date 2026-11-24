@@ -6,6 +6,8 @@ import mysql2 from 'mysql2';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import session from 'express-session';
+
 const pool = mysql2.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -27,6 +29,13 @@ app.use(express.static('public'));
 //Add "middleware" to allow the app to parse form data
 //Access form data through req.body
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session ({
+    secret: process.env.SESSION_SEECRET,
+    resave:false,
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 } //1hour
+}));
 
 // Set view engine to EJS
 app.set('view engine', 'ejs');
