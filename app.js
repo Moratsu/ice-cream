@@ -30,6 +30,13 @@ app.use(express.static('public'));
 //Access form data through req.body
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session ({
+    secret: process.env.SESSION_SEECRET,
+    resave:false,
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 } //1hour
+}));
+
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 
