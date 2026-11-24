@@ -30,13 +30,24 @@ app.use(express.static('public'));
 //Access form data through req.body
 app.use(express.urlencoded({ extended: true }));
 
+
+//Session middleware: lets the server remember users between requests
 app.use(session ({
-    secret: process.env.SESSION_SEECRET,
+    secret: process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized: false,
     cookie: {maxAge: 1000 * 60 * 60 } //1hour
 }));
 
+//Only let logged-in users through; send everyone else to /login
+function requireLogin(req, res, next) {
+    if(req.session.loggedIn) {
+        next();
+    }
+    else {
+        res.redirect('/login');
+    }
+}
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 
